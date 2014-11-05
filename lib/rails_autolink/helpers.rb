@@ -116,11 +116,21 @@ module RailsAutolink
 
                 href_with_params = href
                 if options[:params]
-                  params = options[:params].to_query
-                  if false == options[:sanitize]
-                    params = CGI.escapeHTML params
+                  found_a_match = true
+                  if options[:domains_for_params]
+                    found_a_match = false
+                    uri = URI.parse(href)
+                    options[:domains_for_params].each do |domain|
+                      found_a_match = true if uri.host.include? domain
+                    end
                   end
-                  href_with_params += "?#{params}"
+                  if found_a_match
+                    params = options[:params].to_query
+                    if false == options[:sanitize]
+                      params = CGI.escapeHTML params
+                    end
+                    href_with_params += "?#{params}"
+                  end
                 end
 
                 content_tag(:a, link_text, link_attributes.merge('href' => href_with_params), !!options[:sanitize]) + punctuation.reverse.join('')
