@@ -344,6 +344,17 @@ class TestRailsAutolink < MiniTest::Unit::TestCase
     end
   end
 
+  def test_auto_link_accepts_url_params_to_append
+    text = "hello http://example.com/foo goodbye"
+    output =
+      'hello ' +
+      '<a href="http://example.com/foo?a=1&amp;b=http%3A%2F%2Fjjb.cc%2F&amp;c=M%26M">' +
+      'http://example.com/foo</a>' +
+      ' goodbye'
+    assert_equal output, auto_link(text, :params => {:a => 1, :b => "http://jjb.cc/", :c => "M&M"})
+    assert_equal output, auto_link(text, :params => {:a => 1, :b => "http://jjb.cc/", :c => "M&M"}, sanitize: false)
+  end
+
   private
   def generate_result(link_text, href = nil, escape = false)
     href ||= link_text

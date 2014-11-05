@@ -113,7 +113,17 @@ module RailsAutolink
                   link_text = sanitize(link_text)
                   href      = sanitize(href)
                 end
-                content_tag(:a, link_text, link_attributes.merge('href' => href), !!options[:sanitize]) + punctuation.reverse.join('')
+
+                href_with_params = href
+                if options[:params]
+                  params = options[:params].to_query
+                  if false == options[:sanitize]
+                    params = CGI.escapeHTML params
+                  end
+                  href_with_params += "?#{params}"
+                end
+
+                content_tag(:a, link_text, link_attributes.merge('href' => href_with_params), !!options[:sanitize]) + punctuation.reverse.join('')
               end
             end
           end
