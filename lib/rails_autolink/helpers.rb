@@ -106,6 +106,8 @@ module RailsAutolink
                   end
                 end
 
+                href, trailing = maybe_remove_trailing_semicolon(href, scheme)
+                punctuation << trailing
                 link_text = block_given?? yield(href) : href
                 href = 'http://' + href unless scheme
 
@@ -170,6 +172,18 @@ module RailsAutolink
 
           def conditional_html_safe(target, condition)
             condition ? target.html_safe : target
+          end
+
+          def maybe_remove_trailing_semicolon(href, scheme)
+            return href, "" unless ";" == href[-1]
+            unless scheme
+              href = 'http://' + href unless scheme
+              need_to_remove_scheme = true
+            end
+            pure_uri = URI.extract(href)[0]
+            trailing = href.gsub(pure_uri, "")
+            pure_uri = pure_uri.gsub("http://", "") if need_to_remove_scheme
+            return pure_uri, trailing
           end
       end
     end

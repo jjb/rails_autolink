@@ -344,6 +344,16 @@ class TestRailsAutolink < MiniTest::Unit::TestCase
     end
   end
 
+  def test_auto_link_handles_semicolon_after_url
+    text = "hello http://example.com; goodbye"
+    output =
+      'hello ' +
+      '<a href="http://example.com">' +
+      'http://example.com</a>;' +
+      ' goodbye'
+    assert_equal output, auto_link(text)
+  end
+
   def test_auto_link_accepts_url_params_to_append
     text = "hello http://example.com/foo goodbye"
     output =
