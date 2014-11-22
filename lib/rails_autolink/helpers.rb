@@ -123,7 +123,7 @@ module RailsAutolink
                     found_a_match = false
                     uri = URI.parse(href)
                     options[:domains_for_params].each do |domain|
-                      found_a_match = true if uri.host.include? domain
+                      found_a_match = true if uri.host.downcase.include? domain.downcase
                     end
                   end
                   if found_a_match

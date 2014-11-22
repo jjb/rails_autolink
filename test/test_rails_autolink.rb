@@ -365,12 +365,14 @@ class TestRailsAutolink < MiniTest::Unit::TestCase
     assert_equal output, auto_link(text, :params => {:a => 1, :b => "http://jjb.cc/", :c => "M&M"}, sanitize: false)
   end
 
-  def test_auto_link_accepts_url_params_to_append_for_only_certain_domains
-    text = "hello http://foo.com/a http://example.com/foo http://bar.com/b goodbye"
+  def test_auto_link_accepts_url_params_to_append_for_only_certain_domains_with_case_insensitive_matching
+    text = "hello http://foo.com/a http://FOO.com/z http://example.com/foo http://bar.com/b goodbye"
     output =
       'hello' +
       ' <a href="http://foo.com/a?a=1">' +
       'http://foo.com/a</a>' +
+      ' <a href="http://FOO.com/z?a=1">' +
+      'http://FOO.com/z</a>' +
       ' <a href="http://example.com/foo">' +
       'http://example.com/foo</a>' +
       ' <a href="http://bar.com/b?a=1">' +
