@@ -119,19 +119,17 @@ module RailsAutolink
                 href_with_params = href
                 if options[:params]
                   found_a_match = true
+                  uri = Addressable::URI.parse(href)
                   if options[:domains_for_params]
                     found_a_match = false
-                    uri = URI.parse(href)
                     options[:domains_for_params].each do |domain|
                       found_a_match = true if uri.host.downcase.include? domain.downcase
                     end
                   end
                   if found_a_match
-                    params = options[:params].to_query
-                    if false == options[:sanitize]
-                      params = CGI.escapeHTML params
-                    end
-                    href_with_params += "?#{params}"
+                    uri.query_values = (uri.query_values || {}).merge(options[:params])
+                    uri.query = CGI.escapeHTML uri.query
+                    href_with_params = uri.to_s
                   end
                 end
 
