@@ -392,7 +392,7 @@ class TestRailsAutolink < MiniTest::Unit::TestCase
       ' <a href="http://example.com/foo?a=1&amp;b=http%3A%2F%2Fjjb.cc%2F&amp;c=M%26M">' +
       'http://example.com/foo?a=1</a>' +
       ' <a href="http://example.com?a=1&amp;b=http%3A%2F%2Fjjb.cc%2F&amp;c=M%26M&amp;z=2">' +
-      'http://example.com?a=1&z=2</a>' +
+      'http://example.com?a=1&amp;z=2</a>' +
       ' goodbye'
     assert_equal(
       output,

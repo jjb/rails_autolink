@@ -127,6 +127,7 @@ module RailsAutolink
                     end
                   end
                   if found_a_match
+                    uri.query = CGI.unescapeHTML(uri.query) if uri.query
                     uri.query_values = (uri.query_values || {}).merge(options[:params])
                     uri.query = CGI.escapeHTML uri.query
                     href_with_params = uri.to_s
