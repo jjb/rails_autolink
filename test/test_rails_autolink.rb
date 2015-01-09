@@ -12,6 +12,7 @@ require 'action_view/helpers'
 require 'action_dispatch/testing/assertions'
 require 'timeout'
 require "rails_autolink/helpers"
+require "addressable/uri"
 
 class TestRailsAutolink < MiniTest::Unit::TestCase
   include ActionView::Helpers::CaptureHelper
@@ -381,6 +382,21 @@ class TestRailsAutolink < MiniTest::Unit::TestCase
     assert_equal(
       output,
       auto_link(text, :params => {:a => 1}, :domains_for_params => %w[foo.com bar.com])
+    )
+  end
+
+  def test_auto_link_recognizes_existing_params_when_appending_new_params
+    text = "hello http://example.com/foo?a=1 http://example.com?a=1&z=2 goodbye"
+    output =
+      'hello' +
+      ' <a href="http://example.com/foo?a=1&amp;b=http%3A%2F%2Fjjb.cc%2F&amp;c=M%26M">' +
+      'http://example.com/foo?a=1</a>' +
+      ' <a href="http://example.com?a=1&amp;b=http%3A%2F%2Fjjb.cc%2F&amp;c=M%26M&amp;z=2">' +
+      'http://example.com?a=1&amp;z=2</a>' +
+      ' goodbye'
+    assert_equal(
+      output,
+      auto_link(text, :params => {:b => "http://jjb.cc/", :c => "M&M"})
     )
   end
 
